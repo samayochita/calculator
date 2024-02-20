@@ -1,12 +1,12 @@
 ---
 - name: Pull Docker Image from Docker Hub
   hosts: localhost
-  remote_user: raju
+  remote_user: samayochita
   become: false
   tasks:
     - name: Pull Docker Image
       docker_image:
-        name: "iiitb/calculator"
+        name: "samayochita/calculator"
         source: pull
       register: docker_pull_result
 
