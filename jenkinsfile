@@ -1,48 +1,62 @@
 pipeline {
     agent any
-    
-    environment {
-        DOCKER_IMAGE_NAME = 'calculator'
-        GITHUB_REPO_URL = 'https://github.com/samayochita/calculator.git'
+    tools {
+        maven 'Java_Maven'
+        ansible 'Ansible'
     }
-
     stages {
         stage('Checkout') {
             steps {
                 script {
                     // Checkout the code from the GitHub repository
-                    git branch: 'main', url: "${GITHUB_REPO_URL}"
+                    git branch: 'main', url: "https://github.com/anamika24-git/CalculatorSPE.git"
                 }
             }
         }
-
+        stage('Build') {
+            steps {
+                script {
+                    // Clean and build the Maven project
+                    sh 'mvn clean install'
+                }
+            }
+        }
+    stage('Test Code') {
+      steps {
+        script {
+          sh 'mvn test'
+        }
+      }
+    }
         stage('Build Docker Image') {
             steps {
                 script {
                     // Build Docker image
-                    docker.build("${DOCKER_IMAGE_NAME}", '.')
+                    docker.build('calculator-docker-image' , '.')
                 }
             }
         }
-
-        stage('Push Docker Images') {
-            steps {
-                script{
-                    docker.withRegistry('', 'DockerHubCred') {
-                    sh 'docker tag calculator samayochita/calculator:latest'
-                    sh 'docker push samayochita/calculator'
-                    }
-                 }
+        
+        stage("Push to Dockerhub")
+        {
+            steps{
+                withCredentials([usernamePassword(credentialsId:"DockerHubCred",passwordVariable:"dockerpassword",usernameVariable:"dockerusername")]){
+                    
+                    sh "docker login -u ${env.dockerusername} -p ${env.dockerpassword}"
+                    sh "docker tag calculator-docker-image  ${env.dockerusername}/calculator-docker-image"
+                    sh "docker push ${env.dockerusername}/calculator-docker-image"
+                    
+                }
             }
+            
         }
-
-   stage('Run Ansible Playbook') {
-            steps {
+         stage("Deploy Ansible")
+        {
+            steps{
                 script {
-                    ansiblePlaybook(
-                        playbook: 'deploy.yml',
-                        inventory: 'inventory'
-                     )
+                    withCredentials([usernamePassword(credentialsId: 'localhost', usernameVariable: 'SSH_USERNAME', passwordVariable: 'SSH_PASSWORD')]) {
+                        sh "ansible-playbook -i inventory -u ${SSH_USERNAME} deploy.yml"
+                    }
                 }
             }
         }
