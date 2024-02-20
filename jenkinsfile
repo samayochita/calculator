@@ -1,6 +1,8 @@
 pipeline {
     agent any
-
+    tools  {
+        docker 'Docker'
+    }
     environment {
         DOCKER_IMAGE_NAME = 'calculator'
         GITHUB_REPO_URL = 'https://github.com/samayochita/calculator.git'
