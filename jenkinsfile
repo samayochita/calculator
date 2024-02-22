@@ -1,9 +1,7 @@
 pipeline {
     agent any
 
-    tools {
-      Git "Add git name"
-    }
+    
     environment {
         DOCKER_IMAGE_NAME = 'calculator'
         GITHUB_REPO_URL = 'https://github.com/samayochita/calculator.git'
