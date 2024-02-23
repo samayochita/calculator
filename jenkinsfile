@@ -1,6 +1,8 @@
 pipeline {
     agent any
-
+    tools {
+        ansible 'Local Ansible Server'
+    }
     
     environment {
         DOCKER_IMAGE_NAME = 'calculator'
