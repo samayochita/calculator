@@ -41,15 +41,14 @@ pipeline {
    stage('Run Ansible Playbook') {
             steps {
                 script {
-                     // Add the directory containing ansible-playbook to the PATH
-                  
                     ansiblePlaybook(
                         playbook: 'deploy.yml',
                         inventory: 'inventory'
-                     )
+                    )
                 }
             }
         }
+
 
     }
 }
