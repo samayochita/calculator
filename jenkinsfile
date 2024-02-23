@@ -5,6 +5,7 @@ pipeline {
     environment {
         DOCKER_IMAGE_NAME = 'calculator'
         GITHUB_REPO_URL = 'https://github.com/samayochita/calculator.git'
+        ANSIBLE_PATH = '/opt/homebrew/bin/ansible' 
     }
 
     stages {
