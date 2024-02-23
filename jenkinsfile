@@ -40,14 +40,12 @@ pipeline {
         }
 
    stage('Run Ansible Playbook') {
-            steps {
+            steps{
                 script {
-                    ansiblePlaybook(
-                        playbook: 'deploy.yml',
-                        inventory: 'inventory'
-                    )
+                    withCredentials([usernamePassword(credentialsId: 'localhost', usernameVariable: 'SSH_USERNAME', passwordVariable: 'SSH_PASSWORD')]) {
+                        sh "ansible-playbook -i inventory -u ${SSH_USERNAME} deploy.yml"
+                    }
                 }
-            }
         }
 
 
