@@ -15,9 +15,6 @@
       debug:
         var: docker_pull_result
         
-    - name: Start Docker service
-      service:
-        name: docker
-        state: started
+   
     - name: Running container
       shell: docker run -it -d --name calculator samayochita/calculator
