@@ -30,7 +30,7 @@ pipeline {
             steps {
                 script{
                     docker.withRegistry('', 'DockerHubCred') {
-                    sh 'docker tag calculator samayochita/calculator:latest'
+                    sh 'docker tag calculator samayochita/calculator'
                     sh 'docker push samayochita/calculator'
                     }
                  }
