@@ -14,6 +14,10 @@
     - name: Display Docker Pull Result
       debug:
         var: docker_pull_result
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
         
    
     - name: Running container
