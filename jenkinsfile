@@ -1,8 +1,6 @@
 pipeline {
     agent any
-    tools {
-        ansible 'Local Ansible Server'
-    }
+    
     
     environment {
         DOCKER_IMAGE_NAME = 'calculator'
@@ -41,15 +39,17 @@ pipeline {
             }
         }
 
-   stage('Run Ansible Playbook') {
-            steps{
+    stage('Run Ansible Playbook') {
+            steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'localhost', usernameVariable: 'SSH_USERNAME', passwordVariable: 'SSH_PASSWORD')]) {
-                        sh "ansible-playbook -i inventory -u ${SSH_USERNAME} deploy.yml"
-                    }
+                    ansiblePlaybook(
+                        playbook: 'deploy.yml',
+                        inventory: 'inventory'
+                     )
                 }
+            }
         }
 }
 
    } 
-}
+
